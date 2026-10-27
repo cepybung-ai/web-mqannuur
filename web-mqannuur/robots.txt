@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /admin-
+Disallow: /api.php
+Disallow: /editor.php
+Disallow: /login.php
+Disallow: /logout.php
+Disallow: /site_backup.php
+Disallow: /backup-cron.php
+Disallow: /backups/
+Disallow: /database/
+Disallow: /includes/
+
+Sitemap: http://127.0.0.1:8080/sitemap.xml

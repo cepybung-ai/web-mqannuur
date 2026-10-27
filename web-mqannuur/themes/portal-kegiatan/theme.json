@@ -1,0 +1,7 @@
+{
+    "name": "Portal Kegiatan",
+    "description": "Template portal dinamis dengan sorotan agenda, kartu berita modern, dan panel kontak untuk komunitas dan kegiatan.",
+    "accent": "#4338ca",
+    "version": "1.0.0",
+    "features": ["Hero agenda", "Kartu berita", "Grid kegiatan", "Kontak cepat"]
+}

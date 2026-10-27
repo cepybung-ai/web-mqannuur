@@ -1,0 +1,7 @@
+{
+    "name": "Profil Lembaga",
+    "description": "Template institusional bergaya editorial dengan sorotan berita utama, profil lembaga, dan kanal pengumuman resmi.",
+    "accent": "#1f4d3f",
+    "version": "1.0.0",
+    "features": ["Hero institusional", "Berita utama", "Profil lembaga", "Pengumuman resmi"]
+}
