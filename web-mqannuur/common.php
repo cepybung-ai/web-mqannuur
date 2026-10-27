@@ -90,11 +90,26 @@ function getDbConnection(): PDO
         $dsn = "mysql:unix_socket={$dbSocket};dbname={$dbName};charset=utf8mb4";
     }
 
+    $options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ];
+    $sslCa = pbConfigValue('db_ssl_ca', 'WEB_MQ_DB_SSL_CA', '');
+    $isLocalHost = $dbHost === '' || in_array(strtolower($dbHost), ['127.0.0.1', 'localhost', '::1'], true);
+    if ($sslCa === '' && !$isLocalHost && is_file(__DIR__ . '/database/ca.pem')) {
+        $sslCa = __DIR__ . '/database/ca.pem';
+    }
+    if ($dbHost !== '' && $sslCa !== '' && defined('PDO::MYSQL_ATTR_SSL_CA')) {
+        $options[PDO::MYSQL_ATTR_SSL_CA] = $sslCa;
+    }
+    $sslVerify = pbConfigValue('db_ssl_verify', 'WEB_MQ_DB_SSL_VERIFY', '');
+    if ($dbHost !== '' && $sslVerify !== '' && filter_var($sslVerify, FILTER_VALIDATE_BOOLEAN) === false
+        && defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')) {
+        $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+    }
+
     try {
-        $pdo = new PDO($dsn, $dbUser, $dbPass, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        ]);
+        $pdo = new PDO($dsn, $dbUser, $dbPass, $options);
     } catch (PDOException $exception) {
         error_log('[Page Builder] Database connection error: ' . $exception->getMessage());
         throw new RuntimeException('Koneksi database gagal. Periksa config.local.php atau environment database.', 0, $exception);

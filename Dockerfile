@@ -10,7 +10,8 @@ RUN apt-get update \
     && sed -ri 's/^Listen 80$/Listen 10000/' /etc/apache2/ports.conf \
     && sed -ri 's/<VirtualHost \*:80>/<VirtualHost *:10000>/' /etc/apache2/sites-available/000-default.conf
 
-COPY . /var/www/html/
+COPY web-mqannuur/ /var/www/html/
+COPY database/ca.pem /var/www/html/database/ca.pem
 
 RUN chown -R www-data:www-data /var/www/html/uploads
 

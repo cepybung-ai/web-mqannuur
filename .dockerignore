@@ -1,7 +1,8 @@
 .git
 .gitignore
 .codewhale
-web-mqannuur
+web-mqannuur/.codewhale
+web-mqannuur/config.local.php
 config.local.php
 database/import.php
 Dockerfile
