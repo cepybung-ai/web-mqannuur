@@ -66,11 +66,11 @@ function getDbConnection(): PDO
         return $pdo;
     }
 
-    $dbName = pbConfigValue('db_name', 'WEB_MQ_DB_NAME', 'web_mqannuur');
-    $dbUser = pbConfigValue('db_user', 'WEB_MQ_DB_USER', 'web_mq_local');
-    $dbPass = pbConfigValue('db_pass', 'WEB_MQ_DB_PASS', '');
-    $dbHost = pbConfigValue('db_host', 'WEB_MQ_DB_HOST', '');
-    $dbPort = pbConfigValue('db_port', 'WEB_MQ_DB_PORT', '3306');
+    $dbName = pbConfigValue('db_name', 'WEB_MQ_DB_NAME', getenv('DB_NAME') ?: 'web_mqannuur');
+    $dbUser = pbConfigValue('db_user', 'WEB_MQ_DB_USER', getenv('DB_USER') ?: 'web_mq_local');
+    $dbPass = pbConfigValue('db_pass', 'WEB_MQ_DB_PASS', getenv('DB_PASS') !== false ? (string)getenv('DB_PASS') : '');
+    $dbHost = pbConfigValue('db_host', 'WEB_MQ_DB_HOST', getenv('DB_HOST') ?: '');
+    $dbPort = pbConfigValue('db_port', 'WEB_MQ_DB_PORT', getenv('DB_PORT') ?: '3306');
     if ($dbPort === '' || !preg_match('/^\d{1,5}$/', $dbPort)) {
         $dbPort = '3306';
     }
