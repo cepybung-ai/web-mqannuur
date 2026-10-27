@@ -31,11 +31,25 @@ function pbDbConnection(): PDO
     $dsn = $socket !== ''
         ? "mysql:unix_socket={$socket};dbname={$database};charset=utf8mb4"
         : "mysql:host={$host};port={$port};dbname={$database};charset=utf8mb4";
-    $pdo = new PDO($dsn, $username, $password, [
+    $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false
-    ]);
+    ];
+    $sslCa = getenv('DB_SSL_CA') ?: '';
+    $isLocalHost = in_array(strtolower($host), ['127.0.0.1', 'localhost', '::1'], true) || $socket !== '';
+    if ($sslCa === '' && !$isLocalHost && is_file(__DIR__ . '/database/ca.pem')) {
+        $sslCa = __DIR__ . '/database/ca.pem';
+    }
+    if ($socket === '' && $sslCa !== '' && defined('PDO::MYSQL_ATTR_SSL_CA')) {
+        $options[PDO::MYSQL_ATTR_SSL_CA] = $sslCa;
+    }
+    $sslVerify = getenv('DB_SSL_VERIFY');
+    if ($socket === '' && $sslVerify !== false && filter_var($sslVerify, FILTER_VALIDATE_BOOLEAN) === false
+        && defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')) {
+        $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+    }
+    $pdo = new PDO($dsn, $username, $password, $options);
     return $pdo;
 }
 

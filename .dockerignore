@@ -1,0 +1,10 @@
+.git
+.gitignore
+.codewhale
+web-mqannuur
+config.local.php
+database/import.php
+Dockerfile
+.dockerignore
+README.md
+*.log
